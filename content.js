@@ -1,6 +1,11 @@
 // Listen for video player changes
 let currentVideoId = null;
 
+// Ensure chrome runtime is available
+if (!chrome?.runtime) {
+  throw new Error('Chrome runtime not available');
+}
+
 function extractVideoId(url) {
   const urlParams = new URLSearchParams(new URL(url).search);
   return urlParams.get('v');
@@ -42,15 +47,22 @@ function initVideoPlayerMonitoring() {
       
       // Wait for recommendations to load
       setTimeout(() => {
-        const recommendations = captureRecommendations();
-        chrome.runtime.sendMessage({
-          type: 'VIDEO_ENDED',
-          data: {
-            timestamp: new Date().toISOString(),
-            videoId: videoId,
-            recommendations: recommendations
+        try {
+          const recommendations = captureRecommendations();
+          if (chrome?.runtime?.sendMessage) {
+            // Send message without expecting response
+            chrome.runtime.sendMessage({
+              type: 'VIDEO_ENDED',
+              data: {
+                timestamp: new Date().toISOString(),
+                videoId: videoId,
+                recommendations: recommendations
+              }
+            });
           }
-        });
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
       }, 1000);
     }
   });
