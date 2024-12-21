@@ -3,8 +3,8 @@
 A Chrome extension that tracks and analyzes YouTube video recommendations shown after video completion. Keep track of what YouTube suggests when you finish watching videos!
 
 <div align="center">
-  <img src="screenshots/screenshot1.png" alt="youreco collapsed view" width="400"/>
-  <img src="screenshots/screenshot2.png" alt="youreco expanded view" width="400"/>
+  <img src="screenshots/screenshot1.png" alt="Youreco collapsed view" width="400"/>
+  <img src="screenshots/screenshot2.png" alt="Youreco expanded view" width="400"/>
 </div>
 
 ## Features
@@ -30,7 +30,7 @@ A Chrome extension that tracks and analyzes YouTube video recommendations shown 
 ## Usage
 
 1. Watch YouTube videos normally
-2. When a video ends, youreco will automatically capture the end screen recommendations
+2. When a video ends, Youreco will automatically capture the end screen recommendations
 3. Click the extension icon to view your recommendation history
 4. Click on any source video to expand/collapse its recommendations
 5. Click video titles to open them in YouTube

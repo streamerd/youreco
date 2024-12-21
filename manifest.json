@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "youreco",
+  "name": "Youreco",
   "version": "1.0.16",
   "description": "Track and analyze YouTube video recommendations shown after video completion",
   "permissions": [
