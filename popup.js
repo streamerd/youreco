@@ -36,15 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="https://i.ytimg.com/vi/${entry.videoId}/mqdefault.jpg" 
                alt="Video thumbnail">
           <div class="source-video-info">
-            <div class="source-video-title">Source Video</div>
-            <div class="source-video-meta">
-              <div>ID: ${entry.videoId}</div>
-              <a href="https://www.youtube.com/watch?v=${entry.videoId}" 
-                 target="_blank">Watch on YouTube</a>
+            <a class="recommendation-title" 
+               href="https://www.youtube.com/watch?v=${entry.videoId}" 
+               target="_blank">${entry.title || 'Source Video'}</a>
+            <div class="recommendation-meta">
+              <div>Channel: ${entry.channelName || 'Unknown Channel'}</div>
+              <div>Views: ${entry.viewCount || 'N/A'}</div>
+              ${entry.duration ? `<div>Duration: ${entry.duration}</div>` : ''}
             </div>
           </div>
+          <div class="collapse-arrow"></div>
         </div>
-        <div class="recommendations">
+        <div class="recommendations" style="display: none;">
           <div style="font-weight: bold; margin-bottom: 16px;">End Screen Recommendations:</div>
           ${entry.recommendations.map(rec => `
             <div class="recommendation-item">
@@ -71,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.source-video').forEach(sourceVideo => {
       sourceVideo.addEventListener('click', () => {
         const recommendations = sourceVideo.nextElementSibling;
-        recommendations.classList.toggle('active');
+        recommendations.style.display = recommendations.style.display === 'none' ? 'block' : 'none';
+        sourceVideo.classList.toggle('collapsed', recommendations.style.display === 'block');
       });
     });
   });

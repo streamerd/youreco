@@ -1,9 +1,42 @@
 // Listen for video player changes
 let currentVideoId = null;
+let isExtensionValid = true;
 
-// Ensure chrome runtime is available
-if (!chrome?.runtime) {
-  throw new Error('Chrome runtime not available');
+// Check extension context
+function checkExtensionContext() {
+  try {
+    chrome.runtime.getURL('');
+    isExtensionValid = true;
+    return true;
+  } catch (e) {
+    isExtensionValid = false;
+    console.log('Extension context invalid, will try to reconnect on next video');
+    return false;
+  }
+}
+
+// Initial check
+checkExtensionContext();
+
+function sendMessageToBackground(data) {
+  return new Promise((resolve, reject) => {
+    if (!checkExtensionContext()) {
+      reject(new Error('Extension context invalid'));
+      return;
+    }
+
+    try {
+      chrome.runtime.sendMessage(data, response => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(response);
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
 function extractVideoId(url) {
@@ -49,7 +82,25 @@ function captureRecommendations() {
   return recommendations;
 }
 
-// Monitor video player state
+function getCurrentVideoDetails() {
+  const videoTitle = document.querySelector('h1.ytd-video-primary-info-renderer')?.textContent.trim();
+  const videoId = extractVideoId(window.location.href);
+  const videoThumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+  const channelName = document.querySelector('#owner #channel-name a')?.textContent.trim();
+  const viewCount = document.querySelector('#count .view-count')?.textContent.trim();
+  const duration = document.querySelector('.ytp-time-duration')?.textContent.trim();
+
+  return {
+    videoId,
+    title: videoTitle || 'Unknown Title',
+    thumbnailUrl: videoThumbnail,
+    channelName: channelName || 'Unknown Channel',
+    viewCount: viewCount || 'N/A',
+    duration: duration || ''
+  };
+}
+
+// Update the video end handler
 function initVideoPlayerMonitoring() {
   const video = document.querySelector('video');
   if (!video) return;
@@ -59,23 +110,29 @@ function initVideoPlayerMonitoring() {
     if (videoId && videoId !== currentVideoId) {
       currentVideoId = videoId;
       
-      // Wait for recommendations to load
-      setTimeout(() => {
+      setTimeout(async () => {
         try {
-          const recommendations = captureRecommendations();
-          if (chrome?.runtime?.sendMessage) {
-            // Send message without expecting response
-            chrome.runtime.sendMessage({
-              type: 'VIDEO_ENDED',
-              data: {
-                timestamp: new Date().toISOString(),
-                videoId: videoId,
-                recommendations: recommendations
-              }
-            });
+          if (!isExtensionValid && !checkExtensionContext()) {
+            console.log('Extension context still invalid, skipping recommendation capture');
+            return;
           }
+
+          const recommendations = captureRecommendations();
+          const currentVideo = getCurrentVideoDetails();
+          
+          await sendMessageToBackground({
+            type: 'VIDEO_ENDED',
+            data: {
+              timestamp: new Date().toISOString(),
+              ...currentVideo,
+              recommendations: recommendations
+            }
+          });
         } catch (error) {
-          console.error('Error sending message:', error);
+          console.error('Error processing video end:', error);
+          if (error.message.includes('Extension context invalidated')) {
+            isExtensionValid = false;
+          }
         }
       }, 1000);
     }
@@ -87,7 +144,9 @@ initVideoPlayerMonitoring();
 
 // Handle YouTube's SPA navigation
 const observer = new MutationObserver(() => {
-  initVideoPlayerMonitoring();
+  if (isExtensionValid || checkExtensionContext()) {
+    initVideoPlayerMonitoring();
+  }
 });
 
 observer.observe(document.body, {
