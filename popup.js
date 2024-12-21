@@ -1,30 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const listElement = document.getElementById('recommendationList');
 
-  document.getElementById('debugBtn').addEventListener('click', () => {
-    chrome.storage.local.get(['recommendations'], (result) => {
-      console.log('All stored recommendations:', result.recommendations);
-      if (result.recommendations) {
-        alert(`Found ${result.recommendations.length} stored recommendations. Check console for details.`);
-      } else {
-        alert('No recommendations found in storage');
-      }
-    });
-  });
-
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all stored recommendations?')) {
-      chrome.storage.local.clear(() => {
-        alert('All data cleared');
-        location.reload();
-      });
-    }
-  });
-
-  chrome.storage.local.get(['recommendations'], (result) => {
-    const recommendations = result.recommendations || [];
-    
-    if (recommendations.length === 0) {
+  function updateList(recommendations) {
+    if (!recommendations || recommendations.length === 0) {
       listElement.textContent = 'No recommendations captured yet. Watch some YouTube videos!';
       return;
     }
@@ -78,5 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
         sourceVideo.classList.toggle('collapsed', recommendations.style.display === 'block');
       });
     });
+  }
+
+  document.getElementById('debugBtn').addEventListener('click', () => {
+    chrome.storage.local.get(['recommendations'], (result) => {
+      console.log('All stored recommendations:', result.recommendations);
+      if (result.recommendations) {
+        alert(`Found ${result.recommendations.length} stored recommendations. Check console for details.`);
+      } else {
+        alert('No recommendations found in storage');
+      }
+    });
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all stored recommendations?')) {
+      chrome.storage.local.clear(() => {
+        alert('All data cleared');
+        location.reload();
+      });
+    }
+  });
+
+  // Initial load
+  chrome.storage.local.get(['recommendations'], (result) => {
+    updateList(result.recommendations || []);
+  });
+
+  // Listen for changes in storage
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'local' && changes.recommendations) {
+      updateList(changes.recommendations.newValue || []);
+    }
   });
 }); 
