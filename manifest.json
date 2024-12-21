@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
   "name": "YouTube Recommendations Tracker",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Track and analyze YouTube video recommendations shown after video completion",
   "permissions": [
     "storage",
-    "tabs",
-    "runtime"
+    "tabs"
   ],
   "host_permissions": [
     "*://*.youtube.com/*"
