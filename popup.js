@@ -32,19 +32,47 @@ document.addEventListener('DOMContentLoaded', () => {
     listElement.innerHTML = recommendations.reverse().map(entry => `
       <div class="video-entry">
         <div class="timestamp">${new Date(entry.timestamp).toLocaleString()}</div>
-        <div class="video-id">Source Video: ${entry.videoId}</div>
+        <div class="source-video" data-video-id="${entry.videoId}">
+          <img src="https://i.ytimg.com/vi/${entry.videoId}/mqdefault.jpg" 
+               alt="Video thumbnail">
+          <div class="source-video-info">
+            <div class="source-video-title">Source Video</div>
+            <div class="source-video-meta">
+              <div>ID: ${entry.videoId}</div>
+              <a href="https://www.youtube.com/watch?v=${entry.videoId}" 
+                 target="_blank">Watch on YouTube</a>
+            </div>
+          </div>
+        </div>
         <div class="recommendations">
-          <div style="font-weight: bold; margin: 8px 0;">End Screen Recommendations:</div>
+          <div style="font-weight: bold; margin-bottom: 16px;">End Screen Recommendations:</div>
           ${entry.recommendations.map(rec => `
             <div class="recommendation-item">
-              <a href="${rec.url}" target="_blank">${rec.title}</a>
-              <div>Channel: ${rec.channelName}</div>
-              <div>Views: ${rec.viewCount}</div>
-              ${rec.duration ? `<div>Duration: ${rec.duration}</div>` : ''}
+              <img class="recommendation-thumbnail" 
+                   src="${rec.thumbnailUrl}" 
+                   alt="${rec.title}">
+              <div class="recommendation-info">
+                <a class="recommendation-title" 
+                   href="${rec.url}" 
+                   target="_blank">${rec.title}</a>
+                <div class="recommendation-meta">
+                  <div>Channel: ${rec.channelName}</div>
+                  <div>Views: ${rec.viewCount}</div>
+                  ${rec.duration ? `<div>Duration: ${rec.duration}</div>` : ''}
+                </div>
+              </div>
             </div>
           `).join('')}
         </div>
       </div>
     `).join('');
+
+    // Add click handlers for source videos
+    document.querySelectorAll('.source-video').forEach(sourceVideo => {
+      sourceVideo.addEventListener('click', () => {
+        const recommendations = sourceVideo.nextElementSibling;
+        recommendations.classList.toggle('active');
+      });
+    });
   });
 }); 
