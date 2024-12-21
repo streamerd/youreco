@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Recommendations Tracker</title>
+  <style>
+    body {
+      width: 400px;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+    }
+    .recommendation-list {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .video-entry {
+      margin-bottom: 16px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    .timestamp {
+      color: #666;
+      font-size: 12px;
+    }
+    .recommendations {
+      margin-top: 8px;
+      padding-left: 16px;
+    }
+    .recommendation-item {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Recent Recommendations <span style="font-size: 12px; color: #666;">v1.0.7</span></h2>
+  <div id="recommendationList" class="recommendation-list">
+    Loading...
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
