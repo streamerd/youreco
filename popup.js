@@ -58,16 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.getElementById('debugBtn').addEventListener('click', () => {
-    chrome.storage.local.get(['recommendations'], (result) => {
-      console.log('All stored recommendations:', result.recommendations);
-      if (result.recommendations) {
-        alert(`Found ${result.recommendations.length} stored recommendations. Check console for details.`);
-      } else {
-        alert('No recommendations found in storage');
-      }
-    });
-  });
+//   document.getElementById('debugBtn').addEventListener('click', () => {
+//     chrome.storage.local.get(['recommendations'], (result) => {
+//       console.log('All stored recommendations:', result.recommendations);
+//       if (result.recommendations) {
+//         alert(`Found ${result.recommendations.length} stored recommendations. Check console for details.`);
+//       } else {
+//         alert('No recommendations found in storage');
+//       }
+//     });
+//   });
 
   document.getElementById('clearBtn').addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all stored recommendations?')) {
