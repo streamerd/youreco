@@ -32,13 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
     listElement.innerHTML = recommendations.reverse().map(entry => `
       <div class="video-entry">
         <div class="timestamp">${new Date(entry.timestamp).toLocaleString()}</div>
-        <div class="video-id">Video: ${entry.videoId}</div>
+        <div class="video-id">Source Video: ${entry.videoId}</div>
         <div class="recommendations">
+          <div style="font-weight: bold; margin: 8px 0;">End Screen Recommendations:</div>
           ${entry.recommendations.map(rec => `
             <div class="recommendation-item">
               <a href="${rec.url}" target="_blank">${rec.title}</a>
               <div>Channel: ${rec.channelName}</div>
               <div>Views: ${rec.viewCount}</div>
+              ${rec.duration ? `<div>Duration: ${rec.duration}</div>` : ''}
             </div>
           `).join('')}
         </div>

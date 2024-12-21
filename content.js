@@ -13,21 +13,35 @@ function extractVideoId(url) {
 
 function captureRecommendations() {
   const recommendations = [];
-  const recommendationElements = document.querySelectorAll('ytd-compact-video-renderer');
+  // Get end screen recommendations
+  const endScreenElements = document.querySelectorAll('.ytp-endscreen-content .ytp-videowall-still');
 
-  recommendationElements.forEach(element => {
-    const titleElement = element.querySelector('#video-title');
-    const channelElement = element.querySelector('#channel-name a');
-    const thumbnailElement = element.querySelector('#thumbnail img');
-    const viewCountElement = element.querySelector('#metadata-line span:first-child');
+  endScreenElements.forEach(element => {
+    // Extract video ID from href
+    const videoUrl = element.href;
+    const videoId = extractVideoId(videoUrl);
+    
+    // Get info elements
+    const titleElement = element.querySelector('.ytp-videowall-still-info-title');
+    const authorElement = element.querySelector('.ytp-videowall-still-info-author');
+    const thumbnailElement = element.querySelector('.ytp-videowall-still-image');
+    const durationElement = element.querySelector('.ytp-videowall-still-info-duration');
 
-    if (titleElement && channelElement) {
+    if (titleElement) {
+      const thumbnailUrl = thumbnailElement ? 
+        thumbnailElement.style.backgroundImage.replace(/url\(["'](.+)["']\)/, '$1') : '';
+      
+      const authorText = authorElement ? authorElement.textContent.split('•') : ['Unknown', '0 views'];
+      const channelName = authorText[0].trim();
+      const viewCount = authorText[1] ? authorText[1].trim() : '0 views';
+
       recommendations.push({
         title: titleElement.textContent.trim(),
-        url: titleElement.href,
-        thumbnailUrl: thumbnailElement ? thumbnailElement.src : '',
-        channelName: channelElement.textContent.trim(),
-        viewCount: viewCountElement ? viewCountElement.textContent.trim() : '0 views'
+        url: videoUrl,
+        thumbnailUrl: thumbnailUrl,
+        channelName: channelName,
+        viewCount: viewCount,
+        duration: durationElement ? durationElement.textContent.trim() : ''
       });
     }
   });
