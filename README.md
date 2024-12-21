@@ -3,8 +3,12 @@
 A Chrome extension that tracks and analyzes YouTube video recommendations shown after video completion. Keep track of what YouTube suggests when you finish watching videos!
 
 <div align="center">
-  <img src="screenshots/screenshot1.png" alt="Youreco collapsed view" width="400"/>
-  <img src="screenshots/screenshot2.png" alt="Youreco expanded view" width="400"/>
+  <img src="screenshots/screenshot0.png" alt="Youreco main view" width="800"/>
+  <br/><br/>
+  <div style="display: flex; gap: 16px; justify-content: center;">
+    <img src="screenshots/screenshot1.png" alt="Youreco collapsed view" width="400"/>
+    <img src="screenshots/screenshot2.png" alt="Youreco expanded view" width="400"/>
+  </div>
 </div>
 
 ## Features
