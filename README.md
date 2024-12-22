@@ -47,6 +47,16 @@ A Chrome extension that tracks and analyzes YouTube video recommendations shown 
 - Monitors YouTube's video player state changes
 - Handles Single Page Application (SPA) navigation
 
+## Storage
+
+The extension uses Chrome's `storage.local` API for data persistence:
+
+- Has a maximum size limit (usually around 5MB)
+- Persists between browser sessions
+- Is synchronized between all instances of your extension
+- Can be accessed from any extension script (background, content, popup)
+
+
 ## Development
 
 The extension consists of:
