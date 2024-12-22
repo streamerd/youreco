@@ -1,6 +1,6 @@
 # Youreco
 
-A Chrome extension that tracks and analyzes YouTube video recommendations shown after video completion. Keep track of what YouTube suggests when you finish watching videos!
+A Chrome extension that tracks YouTube video recommendations shown after video completion. Keep track of what YouTube suggests when you finish watching videos!
 
 <div align="center">
   <img src="screenshots/screenshot0.png" alt="Youreco main view" width="800"/>
